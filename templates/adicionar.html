@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Adicionar Pokémon</h2>
+    <form method="POST">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        <br>
+        <label for="tipo">Tipo:</label>
+        <input type="text" id="tipo" name="tipo" required>
+        <br>
+        <input type="submit" value="Adicionar">
+    </form>
+    <a href="{{ url_for('index') }}">Voltar</a>
+{% endblock %}

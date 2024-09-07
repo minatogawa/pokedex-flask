@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Lista de Pokémon</h2>
+    <ul>
+    {% for pokemon in pokemons %}
+        <li>
+            {{ pokemon.nome }} ({{ pokemon.tipo }})
+            <a href="{{ url_for('editar', id=pokemon.id) }}">Editar</a>
+            <a href="{{ url_for('remover', id=pokemon.id) }}">Remover</a>
+        </li>
+    {% endfor %}
+    </ul>
+    <a href="{{ url_for('adicionar') }}">Adicionar Pokémon</a>
+{% endblock %}
