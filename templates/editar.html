@@ -22,7 +22,7 @@
         <div id="drop_zone" class="mb-3 p-5 border border-dashed text-center">
             Arraste e solte a imagem aqui
         </div>
-        <div id="preview" class="mb-3">
+        <div class="mb-3">
             <img id="preview_image" src="{{ pokemon.imagem_url }}" alt="{{ pokemon.nome }}" class="img-thumbnail" style="max-width: 200px;">
         </div>
         <button type="submit" class="btn btn-primary">Salvar</button>
@@ -32,6 +32,48 @@
 
 {% block scripts %}
 <script>
-    // (O mesmo script do template adicionar.html)
+    const dropZone = document.getElementById('drop_zone');
+    const fileInput = document.getElementById('imagem');
+    const imageUrlInput = document.getElementById('imagem_url');
+    const previewImage = document.getElementById('preview_image');
+
+    function updatePreview(src) {
+        previewImage.src = src;
+    }
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('bg-light');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('bg-light');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('bg-light');
+        fileInput.files = e.dataTransfer.files;
+        handleFileSelect(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        handleFileSelect(e.target.files[0]);
+    });
+
+    function handleFileSelect(file) {
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                updatePreview(e.target.result);
+            }
+            reader.readAsDataURL(file);
+            imageUrlInput.value = '';
+        }
+    }
+
+    imageUrlInput.addEventListener('input', () => {
+        updatePreview(imageUrlInput.value);
+    });
 </script>
 {% endblock %}

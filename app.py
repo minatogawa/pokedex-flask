@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -57,9 +57,9 @@ def init_db():
 def salvar_imagem(imagem):
     if imagem:
         filename = secure_filename(imagem.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         imagem.save(filepath)
-        return f'/static/uploads/{filename}'
+        return url_for('static', filename=f'uploads/{filename}', _external=True)
     return None
 
 @app.route('/')
@@ -70,8 +70,6 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -104,6 +102,10 @@ def adicionar():
             if imagem.filename != '':
                 imagem_url = salvar_imagem(imagem)
         
+        if not imagem_url:
+            flash('Por favor, forneça uma imagem ou URL válida.', 'error')
+            return render_template('adicionar.html')
+        
         novo_pokemon = Pokemon(nome=nome, tipo=tipo, imagem_url=imagem_url, user_id=current_user.id)
         db.session.add(novo_pokemon)
         db.session.commit()
@@ -118,14 +120,15 @@ def editar(id):
     if request.method == 'POST':
         pokemon.nome = request.form['nome']
         pokemon.tipo = request.form['tipo']
-        imagem_url = request.form['imagem_url']
         
-        if 'imagem' in request.files:
+        if 'imagem' in request.files and request.files['imagem'].filename != '':
             imagem = request.files['imagem']
-            if imagem.filename != '':
-                imagem_url = salvar_imagem(imagem)
+            imagem_url = salvar_imagem(imagem)
+            if imagem_url:
+                pokemon.imagem_url = imagem_url
+        elif request.form['imagem_url']:
+            pokemon.imagem_url = request.form['imagem_url']
         
-        pokemon.imagem_url = imagem_url
         db.session.commit()
         flash('Pokémon atualizado com sucesso!', 'success')
         return redirect(url_for('index'))
