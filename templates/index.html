@@ -1,21 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2 class="mb-4">Lista de Pokémon</h2>
-    <div class="row">
-        {% for pokemon in pokemons %}
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <img src="{{ pokemon.imagem_url }}" class="card-img-top" alt="{{ pokemon.nome }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ pokemon.nome }}</h5>
-                    <p class="card-text">Tipo: {{ pokemon.tipo }}</p>
-                    <a href="{{ url_for('editar', id=pokemon.id) }}" class="btn btn-primary">Editar</a>
-                    <a href="{{ url_for('remover', id=pokemon.id) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja remover este Pokémon?')">Remover</a>
+    <h2 class="mb-4">Meus Pokémon</h2>
+    {% if pokemons %}
+        <div class="row">
+            {% for pokemon in pokemons %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ pokemon.imagem_url }}" class="card-img-top" alt="{{ pokemon.nome }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ pokemon.nome }}</h5>
+                        <p class="card-text">Tipo: {{ pokemon.tipo }}</p>
+                        <a href="{{ url_for('editar', id=pokemon.id) }}" class="btn btn-primary">Editar</a>
+                        <a href="{{ url_for('remover', id=pokemon.id) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja remover este Pokémon?')">Remover</a>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
+    {% else %}
+        <p>Você ainda não tem nenhum Pokémon. Que tal <a href="{{ url_for('adicionar') }}">adicionar um</a>?</p>
+    {% endif %}
     <a href="{{ url_for('adicionar') }}" class="btn btn-success">Adicionar Pokémon</a>
 {% endblock %}
