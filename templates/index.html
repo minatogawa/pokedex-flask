@@ -1,15 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Lista de Pokémon</h2>
-    <ul>
-    {% for pokemon in pokemons %}
-        <li>
-            {{ pokemon.nome }} ({{ pokemon.tipo }})
-            <a href="{{ url_for('editar', id=pokemon.id) }}">Editar</a>
-            <a href="{{ url_for('remover', id=pokemon.id) }}">Remover</a>
-        </li>
-    {% endfor %}
-    </ul>
-    <a href="{{ url_for('adicionar') }}">Adicionar Pokémon</a>
+    <h2 class="mb-4">Lista de Pokémon</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pokemon in pokemons %}
+            <tr>
+                <td>{{ pokemon.nome }}</td>
+                <td>{{ pokemon.tipo }}</td>
+                <td>
+                    <a href="{{ url_for('editar', id=pokemon.id) }}" class="btn btn-sm btn-primary">Editar</a>
+                    <a href="{{ url_for('remover', id=pokemon.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja remover este Pokémon?')">Remover</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('adicionar') }}" class="btn btn-success">Adicionar Pokémon</a>
 {% endblock %}
