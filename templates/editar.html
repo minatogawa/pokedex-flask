@@ -2,7 +2,7 @@
 
 {% block content %}
     <h2 class="mb-4">Editar Pokémon</h2>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="nome" class="form-label">Nome:</label>
             <input type="text" class="form-control" id="nome" name="nome" value="{{ pokemon.nome }}" required>
@@ -11,7 +11,27 @@
             <label for="tipo" class="form-label">Tipo:</label>
             <input type="text" class="form-control" id="tipo" name="tipo" value="{{ pokemon.tipo }}" required>
         </div>
+        <div class="mb-3">
+            <label for="imagem_url" class="form-label">URL da Imagem:</label>
+            <input type="url" class="form-control" id="imagem_url" name="imagem_url" value="{{ pokemon.imagem_url }}">
+        </div>
+        <div class="mb-3">
+            <label for="imagem" class="form-label">Ou faça upload de uma nova imagem:</label>
+            <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*">
+        </div>
+        <div id="drop_zone" class="mb-3 p-5 border border-dashed text-center">
+            Arraste e solte a imagem aqui
+        </div>
+        <div id="preview" class="mb-3">
+            <img id="preview_image" src="{{ pokemon.imagem_url }}" alt="{{ pokemon.nome }}" class="img-thumbnail" style="max-width: 200px;">
+        </div>
         <button type="submit" class="btn btn-primary">Salvar</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
     </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // (O mesmo script do template adicionar.html)
+</script>
 {% endblock %}

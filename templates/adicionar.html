@@ -2,7 +2,7 @@
 
 {% block content %}
     <h2 class="mb-4">Adicionar Pokémon</h2>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="nome" class="form-label">Nome:</label>
             <input type="text" class="form-control" id="nome" name="nome" required>
@@ -11,7 +11,62 @@
             <label for="tipo" class="form-label">Tipo:</label>
             <input type="text" class="form-control" id="tipo" name="tipo" required>
         </div>
+        <div class="mb-3">
+            <label for="imagem_url" class="form-label">URL da Imagem:</label>
+            <input type="url" class="form-control" id="imagem_url" name="imagem_url">
+        </div>
+        <div class="mb-3">
+            <label for="imagem" class="form-label">Ou faça upload de uma imagem:</label>
+            <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*">
+        </div>
+        <div id="drop_zone" class="mb-3 p-5 border border-dashed text-center">
+            Arraste e solte a imagem aqui
+        </div>
+        <div id="preview" class="mb-3" style="display: none;">
+            <img id="preview_image" src="" alt="Preview" class="img-thumbnail" style="max-width: 200px;">
+        </div>
         <button type="submit" class="btn btn-primary">Adicionar</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
     </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dropZone = document.getElementById('drop_zone');
+    const fileInput = document.getElementById('imagem');
+    const preview = document.getElementById('preview');
+    const previewImage = document.getElementById('preview_image');
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('bg-light');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('bg-light');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('bg-light');
+        fileInput.files = e.dataTransfer.files;
+        updatePreview();
+    });
+
+    fileInput.addEventListener('change', updatePreview);
+
+    function updatePreview() {
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}

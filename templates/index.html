@@ -2,26 +2,20 @@
 
 {% block content %}
     <h2 class="mb-4">Lista de Pokémon</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Tipo</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="row">
         {% for pokemon in pokemons %}
-            <tr>
-                <td>{{ pokemon.nome }}</td>
-                <td>{{ pokemon.tipo }}</td>
-                <td>
-                    <a href="{{ url_for('editar', id=pokemon.id) }}" class="btn btn-sm btn-primary">Editar</a>
-                    <a href="{{ url_for('remover', id=pokemon.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja remover este Pokémon?')">Remover</a>
-                </td>
-            </tr>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{{ pokemon.imagem_url }}" class="card-img-top" alt="{{ pokemon.nome }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ pokemon.nome }}</h5>
+                    <p class="card-text">Tipo: {{ pokemon.tipo }}</p>
+                    <a href="{{ url_for('editar', id=pokemon.id) }}" class="btn btn-primary">Editar</a>
+                    <a href="{{ url_for('remover', id=pokemon.id) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja remover este Pokémon?')">Remover</a>
+                </div>
+            </div>
+        </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
     <a href="{{ url_for('adicionar') }}" class="btn btn-success">Adicionar Pokémon</a>
 {% endblock %}
